@@ -1,42 +1,47 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Load dataset
 df = pd.read_csv("data/data.csv", encoding="latin1")
 
-# Dataset Information
-print("Shape:")
-print(df.shape)
+print("Original Shape:", df.shape)
 
-print("\nColumns:")
-print(df.columns)
+# -------------------------
+# Handle Missing Values
+# -------------------------
 
-print("\nData Types:")
-print(df.dtypes)
+# Fill missing descriptions
+df["Description"] = df["Description"].fillna("Unknown")
 
-print("\nMissing Values:")
-print(df.isnull().sum())
+# Keep CustomerID missing values for now
+# or fill with 0
+df["CustomerID"] = df["CustomerID"].fillna(0)
 
-# Remove rows with missing descriptions
-df = df.dropna(subset=["Description"])
+# -------------------------
+# Remove Duplicate Rows
+# -------------------------
 
-# Chart 1: Quantity Distribution
-df["Quantity"].hist()
-plt.title("Quantity Distribution")
-plt.xlabel("Quantity")
-plt.ylabel("Frequency")
-plt.show()
+duplicates_before = df.duplicated().sum()
+print("Duplicate Rows:", duplicates_before)
 
-# Chart 2: Unit Price Distribution
-df["UnitPrice"].hist()
-plt.title("Unit Price Distribution")
-plt.xlabel("Unit Price")
-plt.ylabel("Frequency")
-plt.show()
+df = df.drop_duplicates()
 
-# Chart 3: Top 10 Countries
-df["Country"].value_counts().head(10).plot(kind="bar")
-plt.title("Top 10 Countries by Transactions")
-plt.xlabel("Country")
-plt.ylabel("Transactions")
-plt.show()
+print("Shape After Removing Duplicates:", df.shape)
+
+# -------------------------
+# Fix Data Types
+# -------------------------
+
+df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+
+df["CustomerID"] = df["CustomerID"].astype(int)
+
+# -------------------------
+# Save Cleaned Dataset
+# -------------------------
+
+df.to_csv(
+    "data/processed/cleaned_data.csv",
+    index=False
+)
+
+print("Cleaned dataset saved successfully!")
