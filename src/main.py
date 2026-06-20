@@ -103,3 +103,34 @@ else:
     )
 
     print(customer_sales.head(10))
+    # ----------------------------------
+# CORE FEATURE 2: Sales Trend Analysis
+# ----------------------------------
+
+"""
+Core Feature 2: Sales Trend Analysis
+
+This feature analyzes sales trends by year
+using the TotalAmount feature created during
+preprocessing.
+"""
+
+print("\nSales Trend Analysis")
+
+if df.empty:
+    print("Dataset is empty.")
+
+elif "InvoiceYear" not in df.columns:
+    print("InvoiceYear column missing.")
+
+elif "TotalAmount" not in df.columns:
+    print("TotalAmount column missing.")
+
+else:
+    yearly_sales = (
+        df.groupby("InvoiceYear")["TotalAmount"]
+        .sum()
+        .sort_index()
+    )
+
+    print(yearly_sales)
