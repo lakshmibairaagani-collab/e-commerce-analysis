@@ -76,3 +76,30 @@ df.to_csv(
 )
 
 print("Preprocessed dataset saved successfully!")
+"""
+Core Feature 1: Customer Purchase Analysis
+
+This feature calculates total spending
+for each customer and identifies the
+top customers based on purchase amount.
+"""
+
+print("\nTop 10 Customers By Spending")
+
+if df.empty:
+    print("Dataset is empty.")
+
+elif "CustomerID" not in df.columns:
+    print("CustomerID column missing.")
+
+elif "TotalAmount" not in df.columns:
+    print("TotalAmount column missing.")
+
+else:
+    customer_sales = (
+        df.groupby("CustomerID")["TotalAmount"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    print(customer_sales.head(10))
