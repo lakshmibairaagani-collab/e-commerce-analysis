@@ -1,47 +1,71 @@
 import pandas as pd
+import os
 
-# Load dataset
-df = pd.read_csv("data/data.csv", encoding="latin1")
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
-print("Original Shape:", df.shape)
-
-# -------------------------
-# Handle Missing Values
-# -------------------------
-
-# Fill missing descriptions
-df["Description"] = df["Description"].fillna("Unknown")
-
-# Keep CustomerID missing values for now
-# or fill with 0
-df["CustomerID"] = df["CustomerID"].fillna(0)
+# Load cleaned dataset
+df = pd.read_csv("data/processed/cleaned_data.csv")
 
 # -------------------------
-# Remove Duplicate Rows
+# Create Derived Features
 # -------------------------
 
-duplicates_before = df.duplicated().sum()
-print("Duplicate Rows:", duplicates_before)
+# Feature 1
+df["TotalAmount"] = df["Quantity"] * df["UnitPrice"]
 
-df = df.drop_duplicates()
-
-print("Shape After Removing Duplicates:", df.shape)
-
-# -------------------------
-# Fix Data Types
-# -------------------------
-
+# Feature 2
 df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+df["InvoiceYear"] = df["InvoiceDate"].dt.year
 
-df["CustomerID"] = df["CustomerID"].astype(int)
+print("New Features Created")
 
 # -------------------------
-# Save Cleaned Dataset
+# Encode Categorical Variables
 # -------------------------
+
+df = pd.get_dummies(df, columns=["Country"])
+
+print("Encoding Completed")
+
+# -------------------------
+# Scale Numerical Features
+# -------------------------
+
+scaler = StandardScaler()
+
+df[["Quantity", "UnitPrice", "TotalAmount"]] = scaler.fit_transform(
+    df[["Quantity", "UnitPrice", "TotalAmount"]]
+)
+
+print("Scaling Completed")
+
+# -------------------------
+# Train/Test Split
+# -------------------------
+
+X = df.drop("CustomerID", axis=1)
+y = df["CustomerID"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.20,
+    random_state=42
+)
+
+print("Training Set Shape:", X_train.shape)
+print("Testing Set Shape:", X_test.shape)
+
+# -------------------------
+# Save Preprocessed Dataset
+# -------------------------
+
+os.makedirs("data/processed", exist_ok=True)
 
 df.to_csv(
-    "data/processed/cleaned_data.csv",
+    "data/processed/preprocessed_data.csv",
     index=False
 )
 
-print("Cleaned dataset saved successfully!")
+print("Preprocessed dataset saved successfully!")
