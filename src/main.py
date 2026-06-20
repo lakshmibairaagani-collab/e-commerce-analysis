@@ -134,3 +134,34 @@ else:
     )
 
     print(yearly_sales)
+    # ----------------------------------
+# CORE FEATURE 3: Product Performance Analysis
+# ----------------------------------
+
+"""
+Core Feature 3: Product Performance Analysis
+
+This feature identifies the top-selling products
+based on total quantity sold.
+"""
+
+print("\nProduct Performance Analysis")
+
+if df.empty:
+    print("Dataset is empty.")
+
+elif "Description" not in df.columns:
+    print("Description column missing.")
+
+elif "Quantity" not in df.columns:
+    print("Quantity column missing.")
+
+else:
+    top_products = (
+        df.groupby("Description")["Quantity"]
+        .sum()
+        .sort_values(ascending=False)
+        .head(10)
+    )
+
+    print(top_products)
