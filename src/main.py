@@ -23,9 +23,25 @@ print("\nLoading dataset...")
 try:
     df = pd.read_csv("data/processed/cleaned_data.csv")
 
+    print(f"Dataset Size: {len(df):,} rows")
+
+    if len(df) > 1000000:
+        print("Warning: Large dataset detected.")
+
     if df.empty:
         print("No data available for analysis.")
         exit()
+
+    # Memory Optimization
+    df["Quantity"] = pd.to_numeric(
+        df["Quantity"],
+        downcast="integer"
+    )
+
+    df["UnitPrice"] = pd.to_numeric(
+        df["UnitPrice"],
+        downcast="float"
+    )
 
     print("Dataset loaded successfully!")
 
@@ -35,30 +51,28 @@ except Exception as e:
 
 print("\nProcessing data...")
 
-# -------------------------
-# Create Derived Features
-# -------------------------
+# ----------------------------------
+# CREATE DERIVED FEATURES
+# ----------------------------------
 
-# Feature 1: Calculate total transaction amount
 df["TotalAmount"] = df["Quantity"] * df["UnitPrice"]
 
-# Feature 2: Extract year from invoice date
 df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
 df["InvoiceYear"] = df["InvoiceDate"].dt.year
 
 print("✓ New Features Created")
 
-# -------------------------
-# Encode Categorical Variables
-# -------------------------
+# ----------------------------------
+# ENCODE CATEGORICAL VARIABLES
+# ----------------------------------
 
 df = pd.get_dummies(df, columns=["Country"])
 
 print("✓ Encoding Completed")
 
-# -------------------------
-# Scale Numerical Features
-# -------------------------
+# ----------------------------------
+# SCALE NUMERICAL FEATURES
+# ----------------------------------
 
 scaler = StandardScaler()
 
@@ -68,9 +82,9 @@ df[["Quantity", "UnitPrice", "TotalAmount"]] = scaler.fit_transform(
 
 print("✓ Scaling Completed")
 
-# -------------------------
-# Train/Test Split
-# -------------------------
+# ----------------------------------
+# TRAIN / TEST SPLIT
+# ----------------------------------
 
 X = df.drop("CustomerID", axis=1)
 y = df["CustomerID"]
@@ -85,9 +99,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 print("Training Set Shape:", X_train.shape)
 print("Testing Set Shape:", X_test.shape)
 
-# -------------------------
-# Save Preprocessed Dataset
-# -------------------------
+# ----------------------------------
+# SAVE PREPROCESSED DATASET
+# ----------------------------------
 
 os.makedirs("data/processed", exist_ok=True)
 
@@ -97,6 +111,28 @@ df.to_csv(
 )
 
 print("✓ Preprocessed dataset saved successfully!")
+
+# ----------------------------------
+# PERFORMANCE OPTIMIZATION
+# ----------------------------------
+
+print("\nOptimizing calculations...")
+
+customer_sales = (
+    df.groupby("CustomerID")["TotalAmount"]
+    .sum()
+)
+
+yearly_sales = (
+    df.groupby("InvoiceYear")["TotalAmount"]
+    .sum()
+    .sort_index()
+)
+
+product_sales = (
+    df.groupby("Description")["Quantity"]
+    .sum()
+)
 
 # ----------------------------------
 # CORE FEATURE 1
@@ -120,13 +156,11 @@ try:
 
     else:
 
-        customer_sales = (
-            df.groupby("CustomerID")["TotalAmount"]
-            .sum()
+        print(
+            customer_sales
             .sort_values(ascending=False)
+            .head(10)
         )
-
-        print(customer_sales.head(10))
 
 except Exception as e:
     print(f"Customer Purchase Analysis Error: {e}")
@@ -152,12 +186,6 @@ try:
         print("Error: TotalAmount column missing.")
 
     else:
-
-        yearly_sales = (
-            df.groupby("InvoiceYear")["TotalAmount"]
-            .sum()
-            .sort_index()
-        )
 
         print(yearly_sales)
 
@@ -186,14 +214,11 @@ try:
 
     else:
 
-        top_products = (
-            df.groupby("Description")["Quantity"]
-            .sum()
+        print(
+            product_sales
             .sort_values(ascending=False)
             .head(10)
         )
-
-        print(top_products)
 
 except Exception as e:
     print(f"Product Performance Analysis Error: {e}")
@@ -210,12 +235,6 @@ print("=" * 50)
 print("Generating Sales Trend Chart...")
 
 try:
-
-    yearly_sales = (
-        df.groupby("InvoiceYear")["TotalAmount"]
-        .sum()
-        .sort_index()
-    )
 
     plt.figure(figsize=(8, 5))
 
@@ -253,12 +272,9 @@ print("=" * 50)
 
 try:
 
-    customer_sales = (
-        df.groupby("CustomerID")["TotalAmount"]
-        .sum()
-    )
-
-    premium = customer_sales[customer_sales > 100]
+    premium = customer_sales[
+        customer_sales > 100
+    ]
 
     regular = customer_sales[
         (customer_sales > 50)
