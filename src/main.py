@@ -226,3 +226,38 @@ try:
 
 except Exception as e:
     print(f"Dashboard Error: {e}")
+
+# ----------------------------------
+# ADVANCED FEATURE 2:
+# CUSTOMER SEGMENTATION
+# ----------------------------------
+
+"""
+Advanced Feature 2: Customer Segmentation
+
+This feature categorizes customers
+based on their total spending.
+"""
+
+print("\nCustomer Segmentation")
+
+try:
+
+    customer_sales = (
+        df.groupby("CustomerID")["TotalAmount"]
+        .sum()
+    )
+
+    premium = customer_sales[customer_sales > 100]
+    regular = customer_sales[
+        (customer_sales > 50) &
+        (customer_sales <= 100)
+    ]
+    basic = customer_sales[customer_sales <= 50]
+
+    print("Premium Customers:", len(premium))
+    print("Regular Customers:", len(regular))
+    print("Basic Customers:", len(basic))
+
+except Exception as e:
+    print(f"Customer Segmentation Error: {e}")    
