@@ -76,6 +76,10 @@ df.to_csv(
 )
 
 print("Preprocessed dataset saved successfully!")
+# ----------------------------------
+# CORE FEATURE 1: Customer Purchase Analysis
+# ----------------------------------
+
 """
 Core Feature 1: Customer Purchase Analysis
 
@@ -86,24 +90,30 @@ top customers based on purchase amount.
 
 print("\nTop 10 Customers By Spending")
 
-if df.empty:
-    print("Dataset is empty.")
+try:
+    if df.empty:
+        print("Error: Dataset is empty.")
 
-elif "CustomerID" not in df.columns:
-    print("CustomerID column missing.")
+    elif "CustomerID" not in df.columns:
+        print("Error: CustomerID column missing.")
 
-elif "TotalAmount" not in df.columns:
-    print("TotalAmount column missing.")
+    elif "TotalAmount" not in df.columns:
+        print("Error: TotalAmount column missing.")
 
-else:
-    customer_sales = (
-        df.groupby("CustomerID")["TotalAmount"]
-        .sum()
-        .sort_values(ascending=False)
-    )
+    else:
+        customer_sales = (
+            df.groupby("CustomerID")["TotalAmount"]
+            .sum()
+            .sort_values(ascending=False)
+        )
 
-    print(customer_sales.head(10))
-    # ----------------------------------
+        print(customer_sales.head(10))
+
+except Exception as e:
+    print(f"Customer Purchase Analysis Error: {e}")
+
+
+# ----------------------------------
 # CORE FEATURE 2: Sales Trend Analysis
 # ----------------------------------
 
@@ -117,24 +127,30 @@ preprocessing.
 
 print("\nSales Trend Analysis")
 
-if df.empty:
-    print("Dataset is empty.")
+try:
+    if df.empty:
+        print("Error: Dataset is empty.")
 
-elif "InvoiceYear" not in df.columns:
-    print("InvoiceYear column missing.")
+    elif "InvoiceYear" not in df.columns:
+        print("Error: InvoiceYear column missing.")
 
-elif "TotalAmount" not in df.columns:
-    print("TotalAmount column missing.")
+    elif "TotalAmount" not in df.columns:
+        print("Error: TotalAmount column missing.")
 
-else:
-    yearly_sales = (
-        df.groupby("InvoiceYear")["TotalAmount"]
-        .sum()
-        .sort_index()
-    )
+    else:
+        yearly_sales = (
+            df.groupby("InvoiceYear")["TotalAmount"]
+            .sum()
+            .sort_index()
+        )
 
-    print(yearly_sales)
-    # ----------------------------------
+        print(yearly_sales)
+
+except Exception as e:
+    print(f"Sales Trend Analysis Error: {e}")
+
+
+# ----------------------------------
 # CORE FEATURE 3: Product Performance Analysis
 # ----------------------------------
 
@@ -147,21 +163,25 @@ based on total quantity sold.
 
 print("\nProduct Performance Analysis")
 
-if df.empty:
-    print("Dataset is empty.")
+try:
+    if df.empty:
+        print("Error: Dataset is empty.")
 
-elif "Description" not in df.columns:
-    print("Description column missing.")
+    elif "Description" not in df.columns:
+        print("Error: Description column missing.")
 
-elif "Quantity" not in df.columns:
-    print("Quantity column missing.")
+    elif "Quantity" not in df.columns:
+        print("Error: Quantity column missing.")
 
-else:
-    top_products = (
-        df.groupby("Description")["Quantity"]
-        .sum()
-        .sort_values(ascending=False)
-        .head(10)
-    )
+    else:
+        top_products = (
+            df.groupby("Description")["Quantity"]
+            .sum()
+            .sort_values(ascending=False)
+            .head(10)
+        )
 
-    print(top_products)
+        print(top_products)
+
+except Exception as e:
+    print(f"Product Performance Analysis Error: {e}")
