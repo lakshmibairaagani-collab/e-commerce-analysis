@@ -6,8 +6,34 @@ import os
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-# Load the cleaned dataset
-df = pd.read_csv("data/processed/cleaned_data.csv")
+# ----------------------------------
+# E-COMMERCE ANALYTICS DASHBOARD
+# ----------------------------------
+
+print("=" * 50)
+print("E-COMMERCE CUSTOMER ANALYTICS DASHBOARD")
+print("=" * 50)
+
+print("\nLoading dataset...")
+
+# ----------------------------------
+# LOAD DATASET
+# ----------------------------------
+
+try:
+    df = pd.read_csv("data/processed/cleaned_data.csv")
+
+    if df.empty:
+        print("No data available for analysis.")
+        exit()
+
+    print("Dataset loaded successfully!")
+
+except Exception as e:
+    print(f"Failed to load dataset: {e}")
+    exit()
+
+print("\nProcessing data...")
 
 # -------------------------
 # Create Derived Features
@@ -20,39 +46,35 @@ df["TotalAmount"] = df["Quantity"] * df["UnitPrice"]
 df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
 df["InvoiceYear"] = df["InvoiceDate"].dt.year
 
-print("New Features Created")
+print("✓ New Features Created")
 
 # -------------------------
 # Encode Categorical Variables
 # -------------------------
 
-# Convert Country column into numerical columns
 df = pd.get_dummies(df, columns=["Country"])
 
-print("Encoding Completed")
+print("✓ Encoding Completed")
 
 # -------------------------
 # Scale Numerical Features
 # -------------------------
 
-# Standardize numerical features
 scaler = StandardScaler()
 
 df[["Quantity", "UnitPrice", "TotalAmount"]] = scaler.fit_transform(
     df[["Quantity", "UnitPrice", "TotalAmount"]]
 )
 
-print("Scaling Completed")
+print("✓ Scaling Completed")
 
 # -------------------------
 # Train/Test Split
 # -------------------------
 
-# Separate features and target variable
 X = df.drop("CustomerID", axis=1)
 y = df["CustomerID"]
 
-# Split dataset into 80% training and 20% testing
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -67,31 +89,26 @@ print("Testing Set Shape:", X_test.shape)
 # Save Preprocessed Dataset
 # -------------------------
 
-# Create processed folder if it doesn't exist
 os.makedirs("data/processed", exist_ok=True)
 
-# Save final preprocessed dataset
 df.to_csv(
     "data/processed/preprocessed_data.csv",
     index=False
 )
 
-print("Preprocessed dataset saved successfully!")
+print("✓ Preprocessed dataset saved successfully!")
+
 # ----------------------------------
-# CORE FEATURE 1: Customer Purchase Analysis
+# CORE FEATURE 1
+# CUSTOMER PURCHASE ANALYSIS
 # ----------------------------------
 
-"""
-Core Feature 1: Customer Purchase Analysis
-
-This feature calculates total spending
-for each customer and identifies the
-top customers based on purchase amount.
-"""
-
-print("\nTop 10 Customers By Spending")
+print("\n" + "=" * 50)
+print("TOP 10 CUSTOMERS BY SPENDING")
+print("=" * 50)
 
 try:
+
     if df.empty:
         print("Error: Dataset is empty.")
 
@@ -102,6 +119,7 @@ try:
         print("Error: TotalAmount column missing.")
 
     else:
+
         customer_sales = (
             df.groupby("CustomerID")["TotalAmount"]
             .sum()
@@ -113,22 +131,17 @@ try:
 except Exception as e:
     print(f"Customer Purchase Analysis Error: {e}")
 
-
 # ----------------------------------
-# CORE FEATURE 2: Sales Trend Analysis
+# CORE FEATURE 2
+# SALES TREND ANALYSIS
 # ----------------------------------
 
-"""
-Core Feature 2: Sales Trend Analysis
-
-This feature analyzes sales trends by year
-using the TotalAmount feature created during
-preprocessing.
-"""
-
-print("\nSales Trend Analysis")
+print("\n" + "=" * 50)
+print("SALES TREND ANALYSIS")
+print("=" * 50)
 
 try:
+
     if df.empty:
         print("Error: Dataset is empty.")
 
@@ -139,6 +152,7 @@ try:
         print("Error: TotalAmount column missing.")
 
     else:
+
         yearly_sales = (
             df.groupby("InvoiceYear")["TotalAmount"]
             .sum()
@@ -150,21 +164,17 @@ try:
 except Exception as e:
     print(f"Sales Trend Analysis Error: {e}")
 
-
 # ----------------------------------
-# CORE FEATURE 3: Product Performance Analysis
+# CORE FEATURE 3
+# PRODUCT PERFORMANCE ANALYSIS
 # ----------------------------------
 
-"""
-Core Feature 3: Product Performance Analysis
-
-This feature identifies the top-selling products
-based on total quantity sold.
-"""
-
-print("\nProduct Performance Analysis")
+print("\n" + "=" * 50)
+print("PRODUCT PERFORMANCE ANALYSIS")
+print("=" * 50)
 
 try:
+
     if df.empty:
         print("Error: Dataset is empty.")
 
@@ -175,24 +185,29 @@ try:
         print("Error: Quantity column missing.")
 
     else:
+
         top_products = (
             df.groupby("Description")["Quantity"]
             .sum()
             .sort_values(ascending=False)
             .head(10)
         )
-    
 
         print(top_products)
 
 except Exception as e:
     print(f"Product Performance Analysis Error: {e}")
-    # ----------------------------------
-# ADVANCED FEATURE 1:
+
+# ----------------------------------
+# ADVANCED FEATURE 1
 # SALES VISUALIZATION DASHBOARD
 # ----------------------------------
 
-print("\nGenerating Sales Trend Chart...")
+print("\n" + "=" * 50)
+print("SALES VISUALIZATION DASHBOARD")
+print("=" * 50)
+
+print("Generating Sales Trend Chart...")
 
 try:
 
@@ -228,18 +243,13 @@ except Exception as e:
     print(f"Dashboard Error: {e}")
 
 # ----------------------------------
-# ADVANCED FEATURE 2:
+# ADVANCED FEATURE 2
 # CUSTOMER SEGMENTATION
 # ----------------------------------
 
-"""
-Advanced Feature 2: Customer Segmentation
-
-This feature categorizes customers
-based on their total spending.
-"""
-
-print("\nCustomer Segmentation")
+print("\n" + "=" * 50)
+print("CUSTOMER SEGMENTATION")
+print("=" * 50)
 
 try:
 
@@ -249,15 +259,27 @@ try:
     )
 
     premium = customer_sales[customer_sales > 100]
+
     regular = customer_sales[
-        (customer_sales > 50) &
-        (customer_sales <= 100)
+        (customer_sales > 50)
+        & (customer_sales <= 100)
     ]
-    basic = customer_sales[customer_sales <= 50]
+
+    basic = customer_sales[
+        customer_sales <= 50
+    ]
 
     print("Premium Customers:", len(premium))
     print("Regular Customers:", len(regular))
     print("Basic Customers:", len(basic))
 
 except Exception as e:
-    print(f"Customer Segmentation Error: {e}")    
+    print(f"Customer Segmentation Error: {e}")
+
+# ----------------------------------
+# COMPLETION MESSAGE
+# ----------------------------------
+
+print("\n" + "=" * 50)
+print("ANALYSIS COMPLETED SUCCESSFULLY")
+print("=" * 50)
