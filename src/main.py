@@ -1,5 +1,6 @@
 # Import required libraries
 import pandas as pd
+import matplotlib.pyplot as plt
 import os
 
 from sklearn.preprocessing import StandardScaler
@@ -180,8 +181,48 @@ try:
             .sort_values(ascending=False)
             .head(10)
         )
+    
 
         print(top_products)
 
 except Exception as e:
     print(f"Product Performance Analysis Error: {e}")
+    # ----------------------------------
+# ADVANCED FEATURE 1:
+# SALES VISUALIZATION DASHBOARD
+# ----------------------------------
+
+print("\nGenerating Sales Trend Chart...")
+
+try:
+
+    yearly_sales = (
+        df.groupby("InvoiceYear")["TotalAmount"]
+        .sum()
+        .sort_index()
+    )
+
+    plt.figure(figsize=(8, 5))
+
+    plt.plot(
+        yearly_sales.index,
+        yearly_sales.values,
+        marker="o"
+    )
+
+    plt.title("Sales Trend by Year")
+    plt.xlabel("Year")
+    plt.ylabel("Total Sales")
+
+    plt.grid(True)
+
+    plt.savefig(
+        "docs/images/sales_trend_dashboard.png"
+    )
+
+    plt.show()
+
+    print("Sales dashboard created successfully!")
+
+except Exception as e:
+    print(f"Dashboard Error: {e}")
