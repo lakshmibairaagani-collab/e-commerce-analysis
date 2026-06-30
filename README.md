@@ -1,61 +1,68 @@
-# E-Commerce Sales Analysis
+# E-Commerce Customer Analytics Dashboard
 
-## Problem Statement
-Analyze e-commerce transaction data to identify sales trends, customer behavior, and business insights.
+## Project Overview
 
-## Dataset Source
-Online Retail Dataset from Kaggle/UCI Machine Learning Repository.
+This project analyzes e-commerce transaction data to generate customer insights, sales trends, and product performance metrics.
 
-## Approach
-1. Data Exploration
-2. Data Cleaning
-3. Feature Engineering
-4. Data Preprocessing
-5. Visualization and Analysis
+## Features
 
-## Sample Visualizations
+### Data Processing
 
-### Quantity Distribution
-![Quantity Distribution](docs/images/Figure_1.png)
+* Data cleaning
+* Feature engineering
+* Data preprocessing
+* Encoding categorical variables
+* Feature scaling
 
-### Unit Price Distribution
-![Unit Price Distribution](docs/images/Figure_2.png)
+### Customer Analytics
 
-### Top 10 Countries by Transactions
-![Top Countries](docs/images/Figure_3.png)
+* Top customer identification
+* Customer spending analysis
+* Customer segmentation
 
-## Tools Used
-- Python
-- Pandas
-- Matplotlib
-- Scikit-learn
-- GitHub
-## Current Project Features
+### Sales Analytics
 
-### Feature 1: Customer Purchase Analysis
+* Yearly sales trend analysis
+* Sales visualization dashboard
 
-* Calculates total spending per customer
-* Identifies top customers by purchase amount
+### Product Analytics
 
-### Feature 2: Sales Trend Analysis
+* Top-selling product analysis
+* Product performance tracking
 
-* Analyzes yearly sales performance
-* Uses transaction data to identify trends
+### Reliability Features
 
-### Feature 3: Product Performance Analysis
+* Error handling
+* Empty state handling
+* User-friendly console interface
+* Performance optimization
+* Memory optimization
 
-* Identifies top-selling products
-* Ranks products by quantity sold
+## Technologies Used
 
-### Validation and Error Handling
+* Python
+* Pandas
+* Matplotlib
+* Scikit-Learn
+* Git
+* GitHub
 
-* Dataset validation
-* Missing column detection
-* Helpful error messages
-* Exception handling with try/except blocks
+## Project Structure
 
-### Testing
+e-commerce-analysis/
+├── data/
+├── docs/
+├── src/
+├── README.md
+└── requirements.txt
 
-* 10+ test cases completed
-* End-to-end testing completed
-* User feedback documented
+## Results
+
+* Top customer spending analysis
+* Customer segmentation
+* Product performance insights
+* Sales trend visualization
+
+## Author
+
+Lakshmi Susmitha
