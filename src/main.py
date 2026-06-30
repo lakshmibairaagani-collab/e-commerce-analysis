@@ -14,6 +14,16 @@ print("=" * 50)
 print("E-COMMERCE CUSTOMER ANALYTICS DASHBOARD")
 print("=" * 50)
 
+print("\nWELCOME!")
+print("This dashboard provides:")
+print("1. Customer Purchase Analysis")
+print("2. Sales Trend Analysis")
+print("3. Product Performance Analysis")
+print("4. Customer Segmentation")
+print("5. Sales Visualization Dashboard")
+
+print("\nPlease wait while data is processed...")
+
 print("\nLoading dataset...")
 
 # ----------------------------------
@@ -21,6 +31,7 @@ print("\nLoading dataset...")
 # ----------------------------------
 
 try:
+
     df = pd.read_csv("data/processed/cleaned_data.csv")
 
     print(f"Dataset Size: {len(df):,} rows")
@@ -29,7 +40,9 @@ try:
         print("Warning: Large dataset detected.")
 
     if df.empty:
-        print("No data available for analysis.")
+        print("No data found.")
+        print("Please place cleaned_data.csv inside:")
+        print("data/processed/")
         exit()
 
     # Memory Optimization
@@ -58,6 +71,7 @@ print("\nProcessing data...")
 df["TotalAmount"] = df["Quantity"] * df["UnitPrice"]
 
 df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+
 df["InvoiceYear"] = df["InvoiceDate"].dt.year
 
 print("✓ New Features Created")
@@ -162,6 +176,10 @@ try:
             .head(10)
         )
 
+        print("\nInsight:")
+        print("These are the highest spending customers in the dataset.")
+        print("They can be targeted for loyalty programs and promotions.")
+
 except Exception as e:
     print(f"Customer Purchase Analysis Error: {e}")
 
@@ -187,7 +205,16 @@ try:
 
     else:
 
+        print("\nNote:")
+        print("Sales values shown below are standardized (scaled) values.")
+        print("Positive values indicate above-average sales.")
+        print("Negative values indicate below-average sales.")
+
         print(yearly_sales)
+
+        print("\nInsight:")
+        print("This section shows how sales changed over the years.")
+        print("Positive values indicate stronger sales performance.")
 
 except Exception as e:
     print(f"Sales Trend Analysis Error: {e}")
@@ -219,6 +246,10 @@ try:
             .sort_values(ascending=False)
             .head(10)
         )
+
+        print("\nInsight:")
+        print("These are the best-selling products based on quantity sold.")
+        print("They represent the most popular items among customers.")
 
 except Exception as e:
     print(f"Product Performance Analysis Error: {e}")
@@ -257,6 +288,8 @@ try:
     plt.show()
 
     print("Sales dashboard created successfully!")
+    print("Dashboard saved at:")
+    print("docs/images/sales_trend_dashboard.png")
 
 except Exception as e:
     print(f"Dashboard Error: {e}")
@@ -289,8 +322,31 @@ try:
     print("Regular Customers:", len(regular))
     print("Basic Customers:", len(basic))
 
+    print("\nCustomer Categories:")
+    print("Premium : Spending > 100")
+    print("Regular : Spending between 50 and 100")
+    print("Basic   : Spending <= 50")
+
 except Exception as e:
     print(f"Customer Segmentation Error: {e}")
+
+# ----------------------------------
+# PROJECT SUMMARY
+# ----------------------------------
+
+print("\n" + "=" * 50)
+print("PROJECT SUMMARY")
+print("=" * 50)
+
+print(f"Dataset Records: {len(df):,}")
+print(f"Total Customers: {df['CustomerID'].nunique():,}")
+print(f"Total Products: {df['Description'].nunique():,}")
+
+print("\nGenerated Outputs:")
+print("- Preprocessed Dataset")
+print("- Sales Trend Dashboard")
+print("- Customer Segmentation")
+print("- Product Performance Analysis")
 
 # ----------------------------------
 # COMPLETION MESSAGE
@@ -299,3 +355,5 @@ except Exception as e:
 print("\n" + "=" * 50)
 print("ANALYSIS COMPLETED SUCCESSFULLY")
 print("=" * 50)
+
+print("\nThank you for using the E-Commerce Analytics Dashboard.")
