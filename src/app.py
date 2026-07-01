@@ -86,7 +86,7 @@ st.header("📄 Dataset Preview")
 
 st.dataframe(
     df.head(10),
-    use_container_width=True
+    width="stretch"
 )
 
 st.divider()
@@ -104,10 +104,8 @@ customer_sales = (
     .head(10)
 )
 
-st.dataframe(
-    customer_sales,
-    use_container_width=True
-)
+st.dataframe(customer_sales, width="stretch")
+
 
 st.bar_chart(customer_sales)
 
@@ -126,10 +124,7 @@ top_products = (
     .head(10)
 )
 
-st.dataframe(
-    top_products,
-    use_container_width=True
-)
+st.dataframe(top_products, use_container_width=True)
 
 st.bar_chart(top_products)
 
