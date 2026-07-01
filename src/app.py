@@ -13,13 +13,20 @@ st.title("📊 E-Commerce Customer Analytics Dashboard")
 # Load Dataset
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data/processed/cleaned_data.csv")
+    df = pd.read_csv(
+    "data/data.csv",
+    encoding="ISO-8859-1"
+)
 
     df["TotalAmount"] = df["Quantity"] * df["UnitPrice"]
+
     df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
+
     df["InvoiceYear"] = df["InvoiceDate"].dt.year
 
     return df
+
+df = load_data()
 
 try:
     df = load_data()
